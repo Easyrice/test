@@ -1,0 +1,88 @@
+	//获得每个区域的消费金额
+	public float getRegionTotal(String region) {
+		//查询每个区域的顾客
+		float sum = 0;
+		CstCustomerExample example = new CstCustomerExample();
+		example.createCriteria().andCustRegionEqualTo(region);
+		List<CstCustomer>custlist = customerMapper.selectByExample(example);
+		for(CstCustomer cust:custlist) {
+			sum += cust.getCustTurnover();
+		}
+		return sum;
+	}
+	//获得总的消费金额
+	public float getTotal() {
+		float total = 0;
+		//查询所有顾客，然后获取每个顾客的消费金额
+		CstCustomerExample example = new CstCustomerExample();
+		List<CstCustomer>custlist = customerMapper.selectByExample(example);
+		for(CstCustomer cust:custlist) {
+			total += cust.getCustTurnover();
+		}
+		return total;
+	}
+	//获得每个区域的百分比
+	@Override
+	public float getRegionPercent(String region) {
+		float percent = getRegionTotal(region)/getTotal();
+		return percent;
+	}
+	//查询不同等级的顾客的人数
+	@Override
+	public int getCustByLevel(String level) {
+		CstCustomerExample example = new CstCustomerExample();
+		example.createCriteria().andCustLevelLabelEqualTo(level);
+		List<CstCustomer> custlist = customerMapper.selectByExample(example);
+		return custlist.size();
+	}
+	//查询不同信用度的顾客的人数
+	@Override
+	public int getCustByCredit(int credit) {
+		CstCustomerExample example = new CstCustomerExample();
+		example.createCriteria().andCustCreditEqualTo(credit);
+		List<CstCustomer> custlist = customerMapper.selectByExample(example);
+		return custlist.size();
+	}
+	//查询不同满意度的顾客的人数
+	@Override
+	public int getCustBySatisfy(int satisfy) {
+		CstCustomerExample example = new CstCustomerExample();
+		example.createCriteria().andCustSatisfyEqualTo(satisfy);
+		List<CstCustomer> custlist = customerMapper.selectByExample(example);
+		return custlist.size();
+	}
+	//查询所有的等级
+	@Override
+	public Set<String> findAllLevel() {
+		Set<String> levelSet = new HashSet<String>();
+		List<CstCustomer> custList = findAllCustomer();
+		for(CstCustomer cust:custList) {
+			String level = cust.getCustLevelLabel();
+			levelSet.add(level);
+		}
+		return levelSet;
+	}
+	//查询所有的信用度
+	@Override
+	public Set<Integer> findAllCredit() {
+		Set<Integer> creditSet = new HashSet<Integer>();
+		List<CstCustomer> custList = findAllCustomer();
+		for(CstCustomer cust:custList) {
+			Integer credit = cust.getCustCredit();
+			creditSet.add(credit);
+		}
+		return creditSet;
+	}
+	//查询所有的满意度
+	@Override
+	public Set<Integer> findAllSatisfy() {
+		Set<Integer> satisfySet = new HashSet<Integer>();
+		List<CstCustomer> custList = findAllCustomer();
+		for(CstCustomer cust:custList) {
+			Integer satisfy = cust.getCustSatisfy();
+			satisfySet.add(satisfy);
+		}
+		return satisfySet;
+	}
+
+	
